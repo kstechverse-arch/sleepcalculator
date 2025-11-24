@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Calculator - Optimize Your Sleep Schedule</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #6b8cbc;
+            --accent: #ff7e5f;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --text: #333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f4f8;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calculator-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background-color: #ff6b4a;
+        }
+        
+        .results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .results h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .bedtime-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .bedtime-option {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .bedtime-option .time {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .bedtime-option .cycles {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .info-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-card h3 i {
+            margin-right: 0.5rem;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator-section {
+                padding: 1.5rem;
+            }
+            
+            .bedtime-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sleep Calculator</h1>
+            <p>Find the best time to fall asleep or wake up based on natural sleep cycles</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="calculator-section">
+            <h2>Sleep Calculator</h2>
+            <p>Calculate the optimal time to go to bed or wake up based on sleep cycles.</p>
+            
+            <div class="input-group">
+                <label for="calculation-type">I want to calculate:</label>
+                <select id="calculation-type">
+                    <option value="wake-up">Best time to wake up</option>
+                    <option value="bedtime">Best time to go to bed</option>
+                </select>
+            </div>
+            
+            <div class="input-group" id="wake-up-time-group">
+                <label for="wake-up-time">When do you need to wake up?</label>
+                <input type="time" id="wake-up-time" value="07:00">
+            </div>
+            
+            <div class="input-group" id="bedtime-time-group" style="display: none;">
+                <label for="bedtime-time">When do you plan to go to bed?</label>
+                <input type="time" id="bedtime-time" value="23:00">
+            </div>
+            
+            <div class="input-group">
+                <label for="fall-asleep-time">How long to fall asleep? (min)</label>
+                <input type="number" id="fall-asleep-time" min="0" max="60" value="15">
+            </div>
+            
+            <button id="calculate-btn">Calculate</button>
+            
+            <div class="results" id="results">
+                <h3>Your Sleep Schedule</h3>
+                <p id="result-text">Based on your input, here are the optimal times:</p>
+                
+                <div class="bedtime-options" id="bedtime-options"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Sleep Calculator © 2024</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculationType = document.getElementById('calculation-type');
+            const wakeUpTimeGroup = document.getElementById('wake-up-time-group');
+            const bedtimeTimeGroup = document.getElementById('bedtime-time-group');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const results = document.getElementById('results');
+            const resultText = document.getElementById('result-text');
+            const bedtimeOptions = document.getElementById('bedtime-options');
+            
+            calculationType.addEventListener('change', function() {
+                wakeUpTimeGroup.style.display = this.value === 'wake-up' ? 'block' : 'none';
+                bedtimeTimeGroup.style.display = this.value === 'bedtime' ? 'block' : 'none';
+            });
+            
+            calculateBtn.addEventListener('click', function() {
+                const fallAsleepTime = parseInt(document.getElementById('fall-asleep-time').value);
+                const type = calculationType.value;
+                
+                let baseTime = type === 'wake-up'
+                    ? document.getElementById('wake-up-time').value
+                    : document.getElementById('bedtime-time').value;
+                
+                resultText.textContent = type === 'wake-up'
+                    ? `To wake up at ${baseTime}, sleep at one of these times:`
+                    : `If you sleep at ${baseTime}, wake up at one of these times:`;
+                
+                const baseMinutes = timeToMinutes(baseTime);
+                const cycles = [6, 5, 4, 3];
+                
+                bedtimeOptions.innerHTML = '';
+                
+                cycles.forEach(cycle => {
+                    const option = document.createElement('div');
+                    option.className = 'bedtime-option';
+                    
+                    let minutes = type === 'wake-up'
+                        ? baseMinutes - (cycle * 90) - fallAsleepTime
+                        : baseMinutes + (cycle * 90) + fallAsleepTime;
+                    
+                    option.innerHTML = `
+                        <div class="time">${minutesToTime(minutes)}</div>
+                        <div class="cycles">${cycle} cycles</div>
+                    `;
+                    
+                    bedtimeOptions.appendChild(option);
+                });
+                
+                results.style.display = 'block';
+            });
+            
+            function timeToMinutes(time) {
+                const [h, m] = time.split(':').map(Number);
+                return h * 60 + m;
+            }
+            
+            function minutesToTime(minutes) {
+                while (minutes < 0) minutes += 1440;
+                minutes %= 1440;
+                const h = String(Math.floor(minutes / 60)).padStart(2, '0');
+                const m = String(minutes % 60).padStart(2, '0');
+                return `${h}:${m}`;
+            }
+        });
+    </script>
+</body>
+</html>
